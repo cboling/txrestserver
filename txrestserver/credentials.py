@@ -60,7 +60,7 @@ class PasswordDictChecker(object):
         return defer.fail(credError.UnauthorizedLogin("No such user"))
 
 
-class IAuthorizedUserAvatar(Interface):
+class IAuthorizedUserAvatar(Interface):                  # pylint: disable=inherit-non-class
     """should have attributes username and fullname"""
 
 
@@ -90,7 +90,7 @@ class Realm(object):
             return (IAuthorizedUserAvatar, AuthorizedUserAvatar(avatarId, fullname),
                     lambda: None)
 
-        elif IResource in interfaces:
+        if IResource in interfaces:
             return IResource, self._api_resource, lambda: None
 
         raise KeyError("None of the requested interfaces are supported")
@@ -111,7 +111,7 @@ def secure_resource(api_resource, method=DEFAULT_SECURITY, _auth_realm=DEFAULT_A
         _resource = HTTPAuthSessionWrapper(portal, credentials_factory)
         raise NotImplementedError("TODO: Not yet tested/working")
 
-    elif method == 'basic':
+    if method == 'basic':
         # credentials_factory = BasicCredentialFactory(auth_realm)
         credentials_factory = [BasicCredentialFactory('auth')]
         resource = HTTPAuthSessionWrapper(portal, credentials_factory)

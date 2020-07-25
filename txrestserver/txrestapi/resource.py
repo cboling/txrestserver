@@ -1,5 +1,5 @@
+# pylint: skip-file
 import re
-from six import b
 from functools import wraps
 from twisted.web.resource import Resource, NoResource
 
@@ -48,7 +48,7 @@ class APIResource(Resource):
         if isinstance(path_to_check, bytes):
             path_to_check = path_to_check.decode()
 
-        for m, r, cb in filter(lambda t: t[0] in (request.method, b('ALL')),
+        for m, r, cb in filter(lambda t: t[0] in (request.method, b'ALL'),
                                self._registry):
             result = r.search(path_to_check)
             if result:

@@ -15,17 +15,17 @@
 
 import os
 from twisted.internet import reactor
-from txrestserver.rest_server import RestServer
+from txrestserver.rest_server import RestServer               # pylint: disable=import-error
 
 try:
-    from api.private_api.api import PrivateRestAPI as RestAPI
+    from examples.api.private_api import PrivateRestAPI as RestAPI
     # from api.private_api.api import PrivateApiRealm as RestApiRealm
 
 except ImportError:
     # Here if built without the private test API REST endpoints.
     # TODO: Eventually the goal is to support access on either a resource directory level
     #       or on a per-resource and verb (GET/PUT/...) basis.
-    from api.api import RestAPI
+    from examples.api.api import RestAPI
     # from api.api import RestApiRealm
 
 

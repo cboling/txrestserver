@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from six import b
-
 from zope.interface import implementer
 from twisted.cred.portal import IRealm
-
 from twisted.web.resource import IResource
-from api.api import RestAPI, EXAMPLE_BASE_PATH
-from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL
+from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL      # pylint: disable=import-error
 
-PRIVATE_PATH = EXAMPLE_BASE_PATH + '/private'
+from ..api import RestAPI, EXAMPLE_BASE_PATH
+
+PRIVATE_PATH = EXAMPLE_BASE_PATH + b'/private'
 
 # pylint: disable=fixme
 # TODO: Modify the txrestserver resource '' to only allow requests from specific domains
@@ -32,8 +30,9 @@ PRIVATE_PATH = EXAMPLE_BASE_PATH + '/private'
 class PrivateRestAPI(RestAPI):
     """ A branch of the REST API resources that need access control for basic operations"""
 
-    @GET(b(PRIVATE_PATH + '?'))
-    def _on_get_private_info(self, _request):
+    @staticmethod
+    @GET(PRIVATE_PATH + b'?')
+    def _on_get_private_info(_request):
         return {'private-key': 'my secret data'}
 
 
@@ -42,8 +41,8 @@ class PrivateRestApiRealm(object):
     """
     A realm which gives out L{GuardedResource} instances for authenticated users.
     """
-    # pylint: disable=invalid-name
-    def requestAvatar(self, _avatarId, _mind, *interfaces):
+    @staticmethod
+    def requestAvatar(_avatarId, _mind, *interfaces):    # pylint: disable=invalid-name
         """
         Return avatar which provides one of the given interfaces.
 

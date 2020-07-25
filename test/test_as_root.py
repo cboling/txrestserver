@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO: Run tests that require root privileges here..
+# Run tests that require root privileges here..
 
 if __name__ == '__main__':
-    print('TODO: I do not do much right now')
+    print('TODO: I do not do very much right now')
 

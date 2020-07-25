@@ -12,21 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from six import b
 from twisted.web.resource import NoResource, IResource
 from twisted.cred.portal import IRealm
 from zope.interface import implementer
 
-from txrestserver.txrestapi.json_resource import JsonAPIResource
-from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL
+from txrestserver.txrestapi.json_resource import JsonAPIResource                # pylint: disable=import-error
+from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL      # pylint: disable=import-error
 
-VERSION_PATH = '^/version'
+VERSION_PATH = b'^/version'
 MY_VERSION = '0.1.0'
 
-EXAMPLE_LIST_PATH = '^/examples'
+EXAMPLE_LIST_PATH = b'^/examples'
 
-EXAMPLE_BASE_PATH = '^/example'
-EXAMPLE_PATH = EXAMPLE_BASE_PATH + '/(?P<key>[^/]*)/'
+EXAMPLE_BASE_PATH = b'^/example'
+EXAMPLE_PATH = EXAMPLE_BASE_PATH + b'/(?P<key>[^/]*)/'
 
 EXAMPLE_ENTRIES = {
     'abc': {
@@ -43,20 +42,23 @@ EXAMPLE_ENTRIES = {
 
 class RestAPI(JsonAPIResource):
     """ Base resources that allow access without any credentials """
-
-    @GET(b(VERSION_PATH))
-    def _on_get_version(self, _request):
+    @staticmethod
+    @GET(VERSION_PATH)
+    def _on_get_version(_request):
         return MY_VERSION
 
-    @GET(b(EXAMPLE_LIST_PATH))
-    def _on_get_example_list(self, _request):
+    @staticmethod
+    @GET(EXAMPLE_LIST_PATH)
+    def _on_get_example_list(_request):
         return list(EXAMPLE_ENTRIES.keys())
 
-    @GET(b(EXAMPLE_PATH + '?'))
-    def _on_get_example_info(self, _request, key):
+    @staticmethod
+    @GET(EXAMPLE_PATH + b'?')
+    def _on_get_example_info(_request, key):
         value = EXAMPLE_ENTRIES.get(key)
         if value is None:
             return NoResource("Example with key '{}' not found".format(key))
+
         return value
 
 
@@ -65,8 +67,8 @@ class RestApiRealm(object):
     """
     A realm which gives out L{GuardedResource} instances for authenticated users.
     """
-    # pylint: disable=invalid-name
-    def requestAvatar(self, _avatarId, _mind, *interfaces):
+    @staticmethod
+    def requestAvatar(_avatarId, _mind, *interfaces):      # pylint: disable=invalid-name
         """
         Return avatar which provides one of the given interfaces.
 

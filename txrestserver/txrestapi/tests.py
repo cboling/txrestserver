@@ -1,9 +1,9 @@
+# pylint: skip-file
 import txrestserver
 __package__="txrestserver"
 import re
 import os.path
 import doctest
-from six import PY2, b, u
 from twisted.internet import reactor
 from twisted.internet.defer import inlineCallbacks
 from twisted.web.resource import Resource, NoResource

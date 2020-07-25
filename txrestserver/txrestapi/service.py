@@ -3,6 +3,6 @@ from .resource import APIResource
 
 
 class RESTfulService(Site):
-    def __init__(self, api, port=8080):
+    def __init__(self, api, _port=8080):
         self.root = api or APIResource()
         super(RESTfulService, self).__init__(self.root, timeout=3)

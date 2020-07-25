@@ -1,9 +1,7 @@
+# pylint: skip-file
 import re
 import json
 import time
-import six
-
-from six import PY2, b
 
 from functools import wraps
 
@@ -38,7 +36,7 @@ class _JsonResource(Resource):
         request.responseHeaders.addRawHeader(b'Access-Control-Max-Age', b'10')
         if execution_time is not None:
             if not isinstance(execution_time, bytes):
-                execution_time = b(execution_time)
+                execution_time = execution_time.encode('utf8')
             request.responseHeaders.addRawHeader(b'X-Execution-Time', execution_time)
         return request
 
@@ -118,13 +116,13 @@ class JsonAPIResource(Resource):
 
     def __init__(self, *args, **kwargs):
         Resource.__init__(self, *args, **kwargs)
-        if PY2:
-            self._registry = []
+        # if PY2:
+        #     self._registry = []
 
     def _get_callback(self, request):
         request_method = request.method
         path_to_check = getattr(request, '_remaining_path', request.path)
-        if not isinstance(path_to_check, six.text_type):
+        if not isinstance(path_to_check, str):
             path_to_check = path_to_check.decode()
 
         for m, r, cb in self._registry:
@@ -136,13 +134,13 @@ class JsonAPIResource(Resource):
         return None, None
 
     def register(self, method, regex, callback):
-        if not isinstance(regex, six.text_type):
+        if not isinstance(regex, str):
             regex = regex.decode()
         self._registry.append((method, re.compile(regex), callback))
 
     def unregister(self, method=None, regex=None, callback=None):
         if regex is not None:
-            if not isinstance(regex, six.text_type):
+            if not isinstance(regex, str):
                 regex = regex.decode()
             regex = re.compile(regex)
 
