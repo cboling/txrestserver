@@ -6,7 +6,7 @@ A twisted-python REST server that supports authentication.
 
 | Version | Notes       |
 | :-----: | :---------- |
-|   0.0.1 | Initial pre-release (Alpha) with basic access authentication Support
+|   0.0.1 | Initial pre-release (Alpha) with basic access authentication Support |
 
 ## Authentication Support
 Currently only Basic authentication is supported but digest and certificate support is planned.
@@ -81,4 +81,4 @@ Using password-based authentication does not require reliance on certificate aut
 
 ## Examples
 
-[Examples](https://github.com/cboling/txrestserver/examples) are available on Github
+[Examples](https://github.com/cboling/txrestserver/tree/master/examples) are available on Github
