@@ -95,7 +95,7 @@ lint: clean
 	@ . ${TESTVENVDIR}/bin/activate && $(MAKE) txrestserver-lint
 
 txrestserver-lint:
-	- pylint --rcfile=${WORKING_DIR}.pylintrc ${WORKING_DIR}/txrestserver/ 2>&1 | tee ${WORKING_DIR}pylint.out.txt
+	- pylint --rcfile=${WORKING_DIR}.pylintrc ${WORKING_DIR}txrestserver/ 2>&1 | tee ${WORKING_DIR}pylint.out.txt
 	@ echo
 	@ echo "See \"file://${WORKING_DIR}pylint.out.txt\" for lint report"
 
