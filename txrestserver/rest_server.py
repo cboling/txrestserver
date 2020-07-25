@@ -20,7 +20,7 @@ DEFAULT_PORT = 8888
 DEFAULT_INTERFACE = ''      # All interfaces
 
 
-class RestServer(object):
+class RestServer:
     """ REST Server """
     def __init__(self, api=None, interface=DEFAULT_INTERFACE, port=DEFAULT_PORT):
         """
@@ -50,7 +50,9 @@ class RestServer(object):
         """ Start the server if it is not running """
         if not self._running:
             site = Site(resource=secure_resource(self._api))
-            self._listener = reactor.listenTCP(self._port, site, interface=self._interface)
+            self._listener = reactor.listenTCP(self._port,                # pylint: disable=no-member
+                                               site,
+                                               interface=self._interface)
             self._running = True
         return self
 

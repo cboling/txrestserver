@@ -40,7 +40,8 @@ passwords = {
 
 
 @implementer(ICredentialsChecker)
-class PasswordDictChecker(object):
+class PasswordDictChecker:
+    """ Credential checker that validates a username and password against a dictionary """
     credentialInterfaces = (IUsernamePassword,)
 
     def __init__(self, passwords_db):
@@ -50,7 +51,18 @@ class PasswordDictChecker(object):
         # TODO: Look for other suggestions that twisted supports easily
         self._passwords = passwords_db
 
-    def requestAvatarId(self, credentials):
+    def requestAvatarId(self, credentials):              # pylint: disable=invalid-name
+        """
+        @param credentials: something which implements one of the interfaces in
+                            self.credentialInterfaces.
+
+        @return: a Deferred which will fire a string which identifies an
+                 avatar, an empty tuple to specify an authenticated anonymous user
+                 (provided as checkers.ANONYMOUS) or fire a Failure(UnauthorizedLogin).
+                 Alternatively, return the result itself.
+
+        @see: L{twisted.cred.credentials}
+        """
         username = credentials.username
 
         if username in self._passwords:
@@ -66,6 +78,7 @@ class IAuthorizedUserAvatar(Interface):                  # pylint: disable=inher
 
 @implementer(IAuthorizedUserAvatar)
 class AuthorizedUserAvatar:
+    """ Access avatar for username/password access authentication """
     def __init__(self, username, fullname):
         self.username = username
         self.fullname = fullname
@@ -75,19 +88,31 @@ class AuthorizedUserAvatar:
 
 
 @implementer(IRealm)
-class Realm(object):
+class Realm:
     """
     A realm which gives out L{GuardedResource} instances for authenticated
     users.
     """
     def __init__(self, api_resource):
         self._api_resource = api_resource
+        self._users = users
 
-    def requestAvatar(self, avatarId, _mind, *interfaces):
+    def requestAvatar(self, avatar_id, _mind, *interfaces):         # pylint: disable=invalid-name
+        """
+        @param credentials: something which implements one of the interfaces in
+                            self.credentialInterfaces.
+
+        @return: a Deferred which will fire a string which identifies an
+                 avatar, an empty tuple to specify an authenticated anonymous user
+                 (provided as checkers.ANONYMOUS) or fire a Failure(UnauthorizedLogin).
+                 Alternatively, return the result itself.
+
+        @see: L{twisted.cred.credentials}
+        """
         if IAuthorizedUserAvatar in interfaces:
             # TODO: How is this called and should it be
-            fullname = self._users[avatarId]
-            return (IAuthorizedUserAvatar, AuthorizedUserAvatar(avatarId, fullname),
+            fullname = self._users[avatar_id]
+            return (IAuthorizedUserAvatar, AuthorizedUserAvatar(avatar_id, fullname),
                     lambda: None)
 
         if IResource in interfaces:
@@ -97,6 +122,15 @@ class Realm(object):
 
 
 def secure_resource(api_resource, method=DEFAULT_SECURITY, _auth_realm=DEFAULT_AUTH_REALM):
+    """
+    Wrap the provide API resource with an HTTP Authentication Session Wrapper
+
+    :param api_resource: API resource to wrap
+    :param method: (str) Method to use
+    :param _auth_realm:  (str) Authentication Realm
+
+    :return: Resource, wrapped as requested
+    """
     if method is None:
         return api_resource
 

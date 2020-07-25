@@ -73,12 +73,7 @@ confidence=
 #   -> Once we have some code cleaned up, begin re-enable of items below
 
 disable=fixme,
-        missing-function-docstring,
-        missing-class-docstring,
-        missing-module-docstring,
-        invalid-name,
-        useless-object-inheritance,
-        no-member
+        missing-module-docstring
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
