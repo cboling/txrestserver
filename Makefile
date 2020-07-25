@@ -92,10 +92,10 @@ run-as-root-tests: # run-as-root-docker
 
 lint: clean
 	@ echo "Executing pylint"
-	@ . ${TESTVENVDIR}/bin/activate && $(MAKE) pyvoltha-min
+	@ . ${TESTVENVDIR}/bin/activate && $(MAKE) txrestserver-lint
 
-lint-pyvoltha-min:
-	- pylint --rcfile=${WORKING_DIR}.pylintrc ${WORKING_DIR} 2>&1 | tee ${WORKING_DIR}pylint.out.txt
+txrestserver-lint:
+	- pylint --rcfile=${WORKING_DIR}.pylintrc ${WORKING_DIR}/txrestserver/ 2>&1 | tee ${WORKING_DIR}pylint.out.txt
 	@ echo
 	@ echo "See \"file://${WORKING_DIR}pylint.out.txt\" for lint report"
 

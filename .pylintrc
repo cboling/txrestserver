@@ -70,18 +70,6 @@ confidence=
 # --disable=W"
 
 # Old ones that use to be below
-#   print-statement,
-#   old-ne-operator,
-#   basestring-builtin,
-#   using-cmp-argument,
-#   bad-python3-import,
-#   deprecated-string-function,
-#   deprecated-types-field,
-#   deprecated-str-translate-call,
-#   deprecated-itertools-function,
-#   deprecated-sys-function,
-#   deprecated-operator-function,
-#   deprecated-urllib-function,
 
 # TODO: Once we have some code cleaned up, begin re-enable of items below
 
