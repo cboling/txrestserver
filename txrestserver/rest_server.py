@@ -21,7 +21,15 @@ DEFAULT_INTERFACE = ''      # All interfaces
 
 
 class RestServer(object):
+    """ REST Server """
     def __init__(self, api=None, interface=DEFAULT_INTERFACE, port=DEFAULT_PORT):
+        """
+        Server initialization
+
+        :param api: (Resource) API resource
+        :param interface: (str) Network Address
+        :param port: (int) Network Port
+        """
         self._interface = interface
         self._port = port
         self._listener = None
@@ -30,9 +38,16 @@ class RestServer(object):
 
     @property
     def rest_api(self):
+        """ Get the current resource """
         return self._api
 
+    @rest_api.setter
+    def rest_api(self, api):
+        assert not self._running, 'API cannot be modified while the server is running'
+        self._api = api
+
     def start(self):
+        """ Start the server if it is not running """
         if not self._running:
             site = Site(resource=secure_resource(self._api))
             self._listener = reactor.listenTCP(self._port, site, interface=self._interface)
@@ -40,6 +55,7 @@ class RestServer(object):
         return self
 
     def stop(self):
+        """ Stop the server """
         if self._running:
             self._running = False
             listener, self._listener = self._listener, None

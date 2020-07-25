@@ -12,24 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 from six import b
 
 from zope.interface import implementer
 from twisted.cred.portal import IRealm
 
-from twisted.web.resource import NoResource, IResource
+from twisted.web.resource import IResource
 from api.api import RestAPI, EXAMPLE_BASE_PATH
-from txrestapi.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL
+from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL
 
 PRIVATE_PATH = EXAMPLE_BASE_PATH + '/private'
 
-# TODO: Modify the txrestapi resource '' to only allow requests from specific domains
-#       and enforce this.  Look at txrestapi 'service.py' and perhaps modify it to support
+# pylint: disable=fixme
+# TODO: Modify the txrestserver resource '' to only allow requests from specific domains
+#       and enforce this.  Look at txrestserver 'service.py' and perhaps modify it to support
 #       this check
 
 
 class PrivateRestAPI(RestAPI):
+    """ A branch of the REST API resources that need access control for basic operations"""
 
     @GET(b(PRIVATE_PATH + '?'))
     def _on_get_private_info(self, _request):
@@ -39,10 +40,29 @@ class PrivateRestAPI(RestAPI):
 @implementer(IRealm)
 class PrivateRestApiRealm(object):
     """
-    A realm which gives out L{GuardedResource} instances for authenticated
-    users.
+    A realm which gives out L{GuardedResource} instances for authenticated users.
     """
-    def requestAvatar(self, avatarId, mind, *interfaces):
+    # pylint: disable=invalid-name
+    def requestAvatar(self, _avatarId, _mind, *interfaces):
+        """
+        Return avatar which provides one of the given interfaces.
+
+        @param _avatarId: a string that identifies an avatar, as returned by
+            L{ICredentialsChecker.requestAvatarId<twisted.cred.checkers.ICredentialsChecker.requestAvatarId>}
+            (via a Deferred).  Alternatively, it may be
+            C{twisted.cred.checkers.ANONYMOUS}.
+        @param _mind: usually None.  See the description of mind in
+            L{Portal.login}.
+        @param interfaces: the interface(s) the returned avatar should
+            implement, e.g.  C{IMailAccount}.  See the description of
+            L{Portal.login}.
+
+        @returns: a deferred which will fire a tuple of (interface,
+            avatarAspect, logout), or the tuple itself.  The interface will be
+            one of the interfaces passed in the 'interfaces' argument.  The
+            'avatarAspect' will implement that interface.  The 'logout' object
+            is a callable which will detach the mind from the avatar.
+        """
         if IResource in interfaces:
             return IResource, RestAPI(), lambda: None
 

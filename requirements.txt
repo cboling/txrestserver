@@ -17,4 +17,4 @@ twisted        == 20.3.0
 zope.interface == 5.1.0
 virtualenv     == 20.0.28
 packaging      == 20.4
-# txrestapi    == 0.2      # has python 3 issues in itertools usage
+# txrestserver    == 0.2      # has python 3 issues in itertools usage

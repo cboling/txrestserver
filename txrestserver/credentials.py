@@ -83,7 +83,7 @@ class Realm(object):
     def __init__(self, api_resource):
         self._api_resource = api_resource
 
-    def requestAvatar(self, avatarId, mind, *interfaces):
+    def requestAvatar(self, avatarId, _mind, *interfaces):
         if IAuthorizedUserAvatar in interfaces:
             # TODO: How is this called and should it be
             fullname = self._users[avatarId]
@@ -96,7 +96,7 @@ class Realm(object):
         raise KeyError("None of the requested interfaces are supported")
 
 
-def secure_resource(api_resource, method=DEFAULT_SECURITY, auth_realm=DEFAULT_AUTH_REALM):
+def secure_resource(api_resource, method=DEFAULT_SECURITY, _auth_realm=DEFAULT_AUTH_REALM):
     if method is None:
         return api_resource
 

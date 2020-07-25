@@ -1,5 +1,5 @@
-import txrestapi
-__package__="txrestapi"
+import txrestserver
+__package__="txrestserver"
 import re
 import os.path
 import doctest

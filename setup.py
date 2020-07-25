@@ -11,19 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+#
+# pylint: disable=missing-module-docstring
 
 # Always prefer setuptools over distutils
 from os import path
 from setuptools import setup, find_packages
 
-# io.open is needed for projects that support Python 2.7
-# It ensures open() defaults to text mode with universal newlines,
-# and accepts an argument to specify the text encoding
-# Python 3 only projects can skip this import
-from io import open
-
-package = 'txrestserver'
+PACKAGE = 'txrestserver'
 setup_dir = path.dirname(path.abspath(__file__))
 version_file = path.join(setup_dir, "VERSION")
 
@@ -39,7 +34,7 @@ required = [line for line in requirements if not line.startswith("-")]
 print("Required is '{}'".format(required))
 
 setup(
-    name=package,
+    name=PACKAGE,
     version=version,
     description='A simple REST server for twisted-python with access authentication support',
     author='Chip Boling',

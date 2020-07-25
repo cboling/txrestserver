@@ -19,8 +19,8 @@ from threading import Condition
 from twisted.internet import reactor, task
 from twisted.web import server, resource
 from twisted.web.server import Site, Request
-from txrestapi.resource import APIResource      # See https://github.com/iancmcc/txrestapi
-from txrestapi.txrestapi.service import RESTfulService
+from txrestserver.resource import APIResource      # See https://github.com/iancmcc/txrestapi
+from txrestserver.txrestapi.service import RESTfulService
 
 
 class Simple(resource.Resource):

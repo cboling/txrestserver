@@ -15,18 +15,18 @@
 
 import os
 from twisted.internet import reactor
-from txrestapi.rest_server import RestServer
+from txrestserver.rest_server import RestServer
 
 try:
     from api.private_api.api import PrivateRestAPI as RestAPI
-    from api.private_api.api import PrivateApiRealm as RestApiRealm
+    # from api.private_api.api import PrivateApiRealm as RestApiRealm
 
 except ImportError:
     # Here if built without the private test API REST endpoints.
     # TODO: Eventually the goal is to support access on either a resource directory level
     #       or on a per-resource and verb (GET/PUT/...) basis.
     from api.api import RestAPI
-    from api.api import RestApiRealm
+    # from api.api import RestApiRealm
 
 
 if __name__ == '__main__':

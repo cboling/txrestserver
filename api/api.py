@@ -17,8 +17,8 @@ from twisted.web.resource import NoResource, IResource
 from twisted.cred.portal import IRealm
 from zope.interface import implementer
 
-from txrestapi.txrestapi.json_resource import JsonAPIResource
-from txrestapi.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL
+from txrestserver.txrestapi.json_resource import JsonAPIResource
+from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL
 
 VERSION_PATH = '^/version'
 MY_VERSION = '0.1.0'
@@ -42,6 +42,7 @@ EXAMPLE_ENTRIES = {
 
 
 class RestAPI(JsonAPIResource):
+    """ Base resources that allow access without any credentials """
 
     @GET(b(VERSION_PATH))
     def _on_get_version(self, _request):
@@ -62,10 +63,29 @@ class RestAPI(JsonAPIResource):
 @implementer(IRealm)
 class RestApiRealm(object):
     """
-    A realm which gives out L{GuardedResource} instances for authenticated
-    users.
+    A realm which gives out L{GuardedResource} instances for authenticated users.
     """
-    def requestAvatar(self, avatarId, mind, *interfaces):
+    # pylint: disable=invalid-name
+    def requestAvatar(self, _avatarId, _mind, *interfaces):
+        """
+        Return avatar which provides one of the given interfaces.
+
+        @param _avatarId: a string that identifies an avatar, as returned by
+            L{ICredentialsChecker.requestAvatarId<twisted.cred.checkers.ICredentialsChecker.requestAvatarId>}
+            (via a Deferred).  Alternatively, it may be
+            C{twisted.cred.checkers.ANONYMOUS}.
+        @param _mind: usually None.  See the description of mind in
+            L{Portal.login}.
+        @param interfaces: the interface(s) the returned avatar should
+            implement, e.g.  C{IMailAccount}.  See the description of
+            L{Portal.login}.
+
+        @returns: a deferred which will fire a tuple of (interface,
+            avatarAspect, logout), or the tuple itself.  The interface will be
+            one of the interfaces passed in the 'interfaces' argument.  The
+            'avatarAspect' will implement that interface.  The 'logout' object
+            is a callable which will detach the mind from the avatar.
+        """
         if IResource in interfaces:
             return IResource, RestAPI(), lambda: None
 
