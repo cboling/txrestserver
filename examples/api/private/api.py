@@ -15,9 +15,9 @@
 from zope.interface import implementer
 from twisted.cred.portal import IRealm
 from twisted.web.resource import IResource
-from txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL      # pylint: disable=import-error
+from src.txrestserver.txrestapi.methods import GET  # , POST, PUT, DELETE, ALL      # pylint: disable=import-error
 
-from ..api import RestAPI, EXAMPLE_BASE_PATH
+from api.api import RestAPI, EXAMPLE_BASE_PATH
 
 PRIVATE_PATH = EXAMPLE_BASE_PATH + b'/private'
 
@@ -37,7 +37,7 @@ class PrivateRestAPI(RestAPI):
 
 
 @implementer(IRealm)
-class PrivateRestApiRealm(object):
+class PrivateRestApiRealm():
     """
     A realm which gives out L{GuardedResource} instances for authenticated users.
     """

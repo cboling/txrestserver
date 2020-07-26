@@ -14,18 +14,14 @@
 # limitations under the License.
 
 # pylint: skip-file
-import pprint
 
-from threading import Condition
-from twisted.internet import reactor, task
+from twisted.internet import reactor
 from twisted.web import server, resource
-from twisted.web.server import Site, Request
-from txrestserver.resource import APIResource      # See https://github.com/iancmcc/txrestapi
-from txrestserver.txrestapi.service import RESTfulService
 
 
 class Simple(resource.Resource):
     isLeaf = False
+
     def render_GET(self, request):
         return "<html>Hello, world!</html>"
 

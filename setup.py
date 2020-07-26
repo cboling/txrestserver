@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright 2020, Boling Consulting Solutions
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +16,9 @@
 # pylint: disable=missing-module-docstring
 
 # Always prefer setuptools over distutils
+from __future__ import absolute_import
 from os import path
+from glob import glob
 from setuptools import setup, find_packages
 
 PACKAGE = 'txrestserver'
@@ -31,7 +34,6 @@ with open(version_file) as version_file:
 
 requirements = open(path.join(setup_dir, "requirements.txt")).read().splitlines()
 required = [line for line in requirements if not line.startswith("-")]
-print("Required is '{}'".format(required))
 
 setup(
     name=PACKAGE,
@@ -42,7 +44,6 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/cboling/txrestserver',
-
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -54,7 +55,10 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    packages=find_packages(exclude=['api', 'examples', 'test']),
+    python_requires='>=3.6',
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    py_modules=[path.splitext(path.basename(path))[0] for path in glob('src/*.py')],
     install_requires=[required],
     include_package_data=True,
 )

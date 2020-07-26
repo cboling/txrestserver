@@ -1,5 +1,5 @@
 # pylint: skip-file
-from zope.interface.advice import addClassAdvisor
+# from zope.interface.advice import addClassAdvisor
 
 
 def method_factory_factory(method):

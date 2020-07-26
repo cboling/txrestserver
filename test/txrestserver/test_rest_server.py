@@ -20,5 +20,5 @@
 # from twisted.internet.error import Con
 
 
-def test_rest_server_example():
+def test_rest_server_start_stop_defaults():
     assert True

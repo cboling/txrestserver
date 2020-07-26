@@ -14,15 +14,26 @@
 
 from twisted.internet import reactor
 from twisted.web.server import Site
+
 from .credentials import secure_resource
+from .txrestapi.json_resource import JsonAPIResource
+from .txrestapi.methods import GET
 
 DEFAULT_PORT = 8888
 DEFAULT_INTERFACE = ''      # All interfaces
 
 
+class DefaultRestAPI(JsonAPIResource):
+    """ Default API """
+    @staticmethod
+    @GET(b'^/.*$')
+    def _on_get_default(_request):
+        return 'Hello world'
+
+
 class RestServer:
     """ REST Server """
-    def __init__(self, api=None, interface=DEFAULT_INTERFACE, port=DEFAULT_PORT):
+    def __init__(self, api=DefaultRestAPI(), interface=DEFAULT_INTERFACE, port=DEFAULT_PORT):
         """
         Server initialization
 
@@ -45,6 +56,16 @@ class RestServer:
     def rest_api(self, api):
         assert not self._running, 'API cannot be modified while the server is running'
         self._api = api
+
+    @property
+    def interface(self):
+        """ Return interface being listened on """
+        return self._interface
+
+    @property
+    def port(self):
+        """ Return interface port number listener is configured for """
+        return self._interface
 
     def start(self):
         """ Start the server if it is not running """

@@ -1,6 +1,10 @@
 # txrestserver
 
-A twisted-python REST server that supports authentication.
+A twisted-python REST server that supports authentication. The server can also serve page and form
+resources, but the primary focus is a flexible and minimal implementation for REST services.
+
+Status:
+![alt text](https://github.com/cboling/txrestserver/workflows/Run%20linter,%20tests%20and,%20and%20release/badge.svg "Workflow Status")
 
 ## Release History
 

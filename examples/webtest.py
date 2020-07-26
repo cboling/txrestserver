@@ -18,14 +18,14 @@ from twisted.internet import reactor
 from txrestserver.rest_server import RestServer               # pylint: disable=import-error
 
 try:
-    from examples.api.private_api import PrivateRestAPI as RestAPI
-    # from api.private_api.api import PrivateApiRealm as RestApiRealm
+    from api.private.api import PrivateRestAPI as RestAPI
+    # from api.private.api import PrivateApiRealm as RestApiRealm
 
 except ImportError:
     # Here if built without the private test API REST endpoints.
     # TODO: Eventually the goal is to support access on either a resource directory level
     #       or on a per-resource and verb (GET/PUT/...) basis.
-    from examples.api.api import RestAPI
+    from api.api import RestAPI
     # from api.api import RestApiRealm
 
 
@@ -34,10 +34,10 @@ if __name__ == '__main__':
     server.start()
 
     # Register shutdown handler
-    reactor.addSystemEventTrigger('before', 'shutdown', server.stop)
+    reactor.addSystemEventTrigger('before', 'shutdown', server.stop)  # pylint: disable=no-member
 
     # Start the test server
-    reactor.run()
+    reactor.run()                                                     # pylint: disable=no-member
 
     # Here after reactor shutdown
     print(os.linesep + 'Done')
