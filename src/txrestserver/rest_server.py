@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from twisted.internet import reactor
+from twisted.internet.defer import Deferred, succeed, failure
+from twisted.internet.error import CannotListenError
 from twisted.web.server import Site
 
 from .credentials import secure_resource
@@ -21,6 +23,7 @@ from .txrestapi.methods import GET
 
 DEFAULT_PORT = 8888
 DEFAULT_INTERFACE = ''      # All interfaces
+DEFAULT_ACCESS_CONTROL = None
 
 
 class DefaultRestAPI(JsonAPIResource):
@@ -33,19 +36,46 @@ class DefaultRestAPI(JsonAPIResource):
 
 class RestServer:
     """ REST Server """
-    def __init__(self, api=DefaultRestAPI(), interface=DEFAULT_INTERFACE, port=DEFAULT_PORT):
+    def __init__(self, api=DefaultRestAPI(), interface=DEFAULT_INTERFACE,
+                 port=DEFAULT_PORT, **kwargs):
         """
         Server initialization
 
         :param api: (Resource) API resource
         :param interface: (str) Network Address
         :param port: (int) Network Port
+        :param kwargs: (dict) Additional configuration.  Supported key/values include:
+                       'access_control': None or 'basic' to set default access control
         """
         self._interface = interface
         self._port = port
         self._listener = None
         self._running = False
         self._api = api
+        self._access_control = kwargs.pop('access_control', DEFAULT_ACCESS_CONTROL)
+
+    def __del__(self):
+        self.stop()
+
+    @property
+    def is_running(self):
+        """ Returns True if the server is running """
+        return self._running
+
+    @property
+    def interface(self):
+        """ Return interface being listened on """
+        return self._interface
+
+    @property
+    def port(self):
+        """ Return interface port number listener is configured for """
+        return self._port
+
+    @property
+    def default_access_control(self):
+        """ Default access mechanism if API does not specify it """
+        return self._access_control
 
     @property
     def rest_api(self):
@@ -57,32 +87,31 @@ class RestServer:
         assert not self._running, 'API cannot be modified while the server is running'
         self._api = api
 
-    @property
-    def interface(self):
-        """ Return interface being listened on """
-        return self._interface
-
-    @property
-    def port(self):
-        """ Return interface port number listener is configured for """
-        return self._interface
-
     def start(self):
         """ Start the server if it is not running """
         if not self._running:
-            site = Site(resource=secure_resource(self._api))
-            self._listener = reactor.listenTCP(self._port,                # pylint: disable=no-member
-                                               site,
-                                               interface=self._interface)
-            self._running = True
-        return self
+            try:
+                site = Site(resource=secure_resource(self._api, self._access_control))
+                self._listener = reactor.listenTCP(self._port,           # pylint: disable=no-member
+                                                   site,
+                                                   interface=self._interface)
+                self._running = True
+
+            except CannotListenError as ex:
+                return failure.Failure(ex)
+
+        return succeed(True)
 
     def stop(self):
         """ Stop the server """
+
+        results = succeed(True)
         if self._running:
             self._running = False
             listener, self._listener = self._listener, None
 
             if listener is not None:
-                listener.stopListening()
-        return self
+                stop_results = listener.stopListening()
+                if isinstance(stop_results, Deferred):
+                    results = stop_results.addCallback(lambda _: True)
+        return results

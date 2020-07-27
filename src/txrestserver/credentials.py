@@ -121,17 +121,17 @@ class Realm:
         raise KeyError("None of the requested interfaces are supported")
 
 
-def secure_resource(api_resource, method=DEFAULT_SECURITY, _auth_realm=DEFAULT_AUTH_REALM):
+def secure_resource(api_resource, default_method, _auth_realm=DEFAULT_AUTH_REALM):
     """
     Wrap the provide API resource with an HTTP Authentication Session Wrapper
 
     :param api_resource: API resource to wrap
-    :param method: (str) Method to use
+    :param default_method: (str) Access control to use if not specifically stated by API
     :param _auth_realm:  (str) Authentication Realm
 
     :return: Resource, wrapped as requested
     """
-    if method is None:
+    if default_method is None:
         return api_resource
 
     checkers = [PasswordDictChecker(passwords)]
@@ -139,18 +139,18 @@ def secure_resource(api_resource, method=DEFAULT_SECURITY, _auth_realm=DEFAULT_A
 
     portal = Portal(realm, checkers)
 
-    if method == 'digest':
+    if default_method == 'digest':
         # credentials_factory = DigestCredentialFactory("md5", auth_realm)
         credentials_factory = DigestCredentialFactory("md5", 'auth')
         _resource = HTTPAuthSessionWrapper(portal, credentials_factory)
         raise NotImplementedError("TODO: Not yet tested/working")
 
-    if method == 'basic':
+    if default_method == 'basic':
         # credentials_factory = BasicCredentialFactory(auth_realm)
         credentials_factory = [BasicCredentialFactory('auth')]
         resource = HTTPAuthSessionWrapper(portal, credentials_factory)
 
     else:
-        assert False, 'Invalid security method: {}'.format(method)
+        assert False, 'Invalid security method: {}'.format(default_method)
 
     return resource
