@@ -8,7 +8,7 @@ are subject to change. The design goal is to provide a small set of simple class
 be configured for various access authentication mechanisms and for credentials/secrets storage.
 
 Status:
-![alt text](https://github.com/cboling/txrestserver/workflows/Run%20linter,%20tests%20and,%20and%20release/badge.svg "Workflow Status")
+![alt text](https://github.com/cboling/txrestserver/workflows/CI/badge.svg "Workflow Status")
 
 ## Release History
 
