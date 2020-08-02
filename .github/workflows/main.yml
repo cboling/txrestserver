@@ -13,25 +13,29 @@ on:
 # Job definitions
 jobs:
   test:
-    # TODO: See about changing to slim-buster pythons version specific bases if that is supported
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.6]   # TODO: Add more versions -> [3.6, 3.7, 3.8]
 
     steps:
       - uses: actions/checkout@v2
-
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python }}
 
-      - name: Install dependencies with pipenv
+      - name: Install dependencies
         run: |
-          pip install pipenv
-          pipenv install --deploy --dev
+          python -m pip install --upgrade pip
+          pip install install -r test/requirements
 
+      - name: Run tox
+        run: tox -e py
+        
       # - run: pipenv run isort --recursive --diff
       # - run: pipenv run black --check .
       # - run: pipenv run flake8
       # - run: pipenv run mypy
-      - run: pipenv run pylint --rcfile=.pylintrc
-      - run: pipenv run pytest --cov    # --cov-fail-under=50
+      # - run: pipenv run pylint --rcfile=.pylintrc
+      # - run: pipenv run pytest --cov    # --cov-fail-under=50
