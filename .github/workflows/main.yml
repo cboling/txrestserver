@@ -1,0 +1,37 @@
+# txrestserver github action support
+
+name: CI
+
+# Run on push and pull requests for master only at thit time
+on:
+  push:
+    branches: [ master ]
+
+  pull_request:
+    branches: [ master ]
+
+# Job definitions
+jobs:
+  test:
+    # TODO: See about changing to slim-buster pythons version specific bases if that is supported
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+
+      - name: Install dependencies with pipenv
+        run: |
+          pip install pipenv
+          pipenv install --deploy --dev
+
+      # - run: pipenv run isort --recursive --diff
+      # - run: pipenv run black --check .
+      # - run: pipenv run flake8
+      # - run: pipenv run mypy
+      - run: pipenv run pylint --rcfile=.pylintrc
+      - run: pipenv run pytest --cov    # --cov-fail-under=50
