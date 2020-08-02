@@ -3,6 +3,10 @@
 A twisted-python REST server that supports authentication. The server can also serve page and form
 resources, but the primary focus is a flexible and minimal implementation for REST services.
 
+As authentication features, examples, and unit tests are added, the public interfaces to this module
+are subject to change. The design goal is to provide a small set of simple classes that can easily
+be configured for various access authentication mechanisms and for credentials/secrets storage.
+
 Status:
 ![alt text](https://github.com/cboling/txrestserver/workflows/Run%20linter,%20tests%20and,%20and%20release/badge.svg "Workflow Status")
 
@@ -86,3 +90,11 @@ Using password-based authentication does not require reliance on certificate aut
 ## Examples
 
 [Examples](https://github.com/cboling/txrestserver/tree/master/examples) are available on Github
+
+## Acknowledgements
+
+Thanks to _iancmcci_'s [txrestapi](https://github.com/iancmcc/txrestapi) project. An ealier version
+of this project was available on [pypi](https://pypi.org/project/txrestapi/), but it has not been
+updated since 2015. The github repository is likewise a little stale but provided some great
+code to start with. This project's txrestapi subdirectory contains much of the original code, readme, and
+license file and has been cleaned up to run primarily on Python 3 with fewer imports.

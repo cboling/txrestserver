@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# import pytest
+import pytest
 import pytest_twisted
+from twisted.internet.error import CannotListenError
 # from mock import MagicMock
 
 from txrestserver.rest_server import RestServer, DEFAULT_INTERFACE, DEFAULT_PORT, \
@@ -22,6 +23,11 @@ from txrestserver.rest_server import RestServer, DEFAULT_INTERFACE, DEFAULT_PORT
 from apis.api import MyRestAPI
 
 
+##################################################################################
+##################################################################################
+#
+#   rest_server API tests
+#
 def test_rest_server_defaults():
     server = RestServer()
     assert server is not None
@@ -84,3 +90,84 @@ def test_rest_server_start_stop_with_test_api():
     success = yield server.stop()
     assert success, 'Server failed to start'
     assert not server.is_running
+
+
+@pytest_twisted.inlineCallbacks
+def test_port_in_use_already_opened():
+    # Open server 1 on default port
+    server1 = RestServer()
+    assert server1 is not None
+    success = yield server1.start()
+    assert success, 'Server failed to start'
+    assert server1.is_running
+
+    # Now try to open another server on the same default port and interface(s)
+    server2 = RestServer()
+    assert server2 is not None
+
+    with pytest.raises(CannotListenError) as ex_info:
+        success = yield server2.start()
+        assert not success, 'Server should not have started'
+        assert not server2.is_running
+
+        # Should be a socket error
+        assert ex_info is not None
+        assert ex_info.socketError is not None
+
+    # server 1 should be okay
+    assert server1.is_running
+
+    # stop server 1 and try server 2 again
+    success = yield server1.stop()
+    assert success
+    assert not server1.is_running
+
+    success = yield server2.start()
+    assert success
+    assert server2.is_running
+    yield server2.stop()
+
+
+@pytest_twisted.inlineCallbacks
+def test_no_api_change_while_running():
+    server = RestServer()
+    assert server is not None
+    success = yield server.start()
+
+    assert success, 'Server failed to start'
+    assert server.is_running
+
+    with pytest.raises(ValueError) as ex_info:
+        server.api = MyRestAPI()
+        assert ex_info is not None
+
+    assert (yield server.stop())
+    server.api = MyRestAPI()
+
+    assert isinstance(server.api, MyRestAPI)
+
+
+##################################################################################
+##################################################################################
+#
+#   rest_server REST operations tests
+#
+@pytest.fixture()
+def test_server():
+    server = RestServer()
+    server.start()
+
+    yield server
+
+    server.stop()
+
+
+# @pytest_twisted.inlineCallbacks
+# def test_rest_server_fixture_test(test_server):
+#
+#     assert test_server.is_running
+#     assert True
+#
+#
+# def test_rest_server_has_default_api():
+#     assert True

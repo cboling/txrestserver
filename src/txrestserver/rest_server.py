@@ -78,13 +78,20 @@ class RestServer:
         return self._access_control
 
     @property
-    def rest_api(self):
-        """ Get the current resource """
+    def api(self):
+        """ Get the current resource/API """
         return self._api
 
-    @rest_api.setter
-    def rest_api(self, api):
-        assert not self._running, 'API cannot be modified while the server is running'
+    @api.setter
+    def api(self, api):
+        """
+        Set the API resources
+        :param api: (IResource) API Resource to apply
+        :raises: ValueError if the server is currently running
+        """
+        if self._running:
+            raise ValueError('API cannot be modified while the server is running')
+
         self._api = api
 
     def start(self):
@@ -106,6 +113,7 @@ class RestServer:
         """ Stop the server """
 
         results = succeed(True)
+
         if self._running:
             self._running = False
             listener, self._listener = self._listener, None
