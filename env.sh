@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # load local python virtualenv if exists
-VENVDIR={$VENVDIR:-"venv"
+VENVDIR={$VENVDIR:-"venv"}
 if [ -e "$VENVDIR/bin/activate" ]; then
     . $VENVDIR/bin/activate
 else
