@@ -145,29 +145,3 @@ def test_no_api_change_while_running():
     server.api = MyRestAPI()
 
     assert isinstance(server.api, MyRestAPI)
-
-
-##################################################################################
-##################################################################################
-#
-#   rest_server REST operations tests
-#
-@pytest.fixture()
-def test_server():
-    server = RestServer()
-    server.start()
-
-    yield server
-
-    server.stop()
-
-
-# @pytest_twisted.inlineCallbacks
-# def test_rest_server_fixture_test(test_server):
-#
-#     assert test_server.is_running
-#     assert True
-#
-#
-# def test_rest_server_has_default_api():
-#     assert True

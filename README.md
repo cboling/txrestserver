@@ -14,7 +14,8 @@ Status:
 
 | Version | Notes       |
 | :-----: | :---------- |
-|   0.0.1 | Initial pre-release (Alpha) with basic access authentication Support |
+|   0.2.0 | Reworked basic server API and added unit/security test coverage |
+|   0.1.0 | Initial pre-release (Alpha) with basic access authentication Support |
 
 ## Authentication Support
 Currently only Basic authentication is supported but digest and certificate support is planned.

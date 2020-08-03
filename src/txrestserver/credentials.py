@@ -151,6 +151,6 @@ def secure_resource(api_resource, default_method, _auth_realm=DEFAULT_AUTH_REALM
         resource = HTTPAuthSessionWrapper(portal, credentials_factory)
 
     else:
-        assert False, 'Invalid security method: {}'.format(default_method)
+        raise ValueError('Invalid security method: {}'.format(default_method))
 
     return resource

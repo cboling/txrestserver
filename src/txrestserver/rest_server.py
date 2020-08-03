@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from twisted.internet import reactor
-from twisted.internet.defer import Deferred, succeed, failure
+from twisted.internet.defer import Deferred, succeed, failure, fail
 from twisted.internet.error import CannotListenError
 from twisted.web.server import Site
 
@@ -105,7 +105,8 @@ class RestServer:
                 self._running = True
 
             except CannotListenError as ex:
-                return failure.Failure(ex)
+                return fail(failure.Failure(ex))
+                # return failure.Failure(ex)
 
         return succeed(True)
 
