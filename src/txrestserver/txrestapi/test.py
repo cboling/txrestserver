@@ -27,6 +27,9 @@ class Simple(resource.Resource):
 
 
 if __name__ == '__main__':
+    import warnings
+    msg = 'These tests will be removed in a future release of the txrestserver'
+    warnings.warn(msg, DeprecationWarning)
     site = server.Site(Simple())
     reactor.listenTCP(8780, site)
     reactor.run()

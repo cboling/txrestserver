@@ -17,6 +17,10 @@ class FakeChannel(object):
 
 
 def getRequest(method, url):
+    import warnings
+    msg = 'These tests will be removed in a future release of the txrestserver'
+    warnings.warn(msg, DeprecationWarning)
+
     req = Request(FakeChannel(), None)
     req.method = method
     req.path = url
@@ -192,6 +196,10 @@ class DecoratorsTest(unittest.TestCase):
 
 
 def test_suite():
+    import warnings
+    msg = 'These tests will be removed in a future release of the txrestserver'
+    warnings.warn(msg, DeprecationWarning)
+
     import unittest as ut
     suite = unittest.TestSuite()
     suite.addTest(ut.makeSuite(DecoratorsTest))
