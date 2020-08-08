@@ -17,17 +17,16 @@ from twisted.internet.defer import Deferred, succeed, failure, fail
 from twisted.internet.error import CannotListenError
 from twisted.web.server import Site
 
-from .credentials import secure_resource
+from .access.access import OpenAccessConfig
 from .txrestapi.json_resource import JsonAPIResource
 from .txrestapi.methods import GET
 
 DEFAULT_PORT = 8888
-DEFAULT_INTERFACE = ''      # All interfaces
-DEFAULT_ACCESS_CONTROL = None
+DEFAULT_INTERFACE = ''      # All interfaces=
 
 
 class DefaultRestAPI(JsonAPIResource):
-    """ Default API """
+    """ Default API used if not provided on initial startup """
     @staticmethod
     @GET(b'^/.*$')
     def _on_get_default(_request):
@@ -45,14 +44,14 @@ class RestServer:
         :param interface: (str) Network Address
         :param port: (int) Network Port
         :param kwargs: (dict) Additional configuration.  Supported key/values include:
-                       'access_control': None or 'basic' to set default access control
+                       'access_config': None or one of the AccessConfig subclasses
         """
         self._interface = interface
         self._port = port
         self._listener = None
         self._running = False
         self._api = api
-        self._access_control = kwargs.pop('access_control', DEFAULT_ACCESS_CONTROL)
+        self._default_access_control = kwargs.pop('access_control', OpenAccessConfig())
 
     def __del__(self):
         self.stop()
@@ -75,7 +74,7 @@ class RestServer:
     @property
     def default_access_control(self):
         """ Default access mechanism if API does not specify it """
-        return self._access_control
+        return self._default_access_control
 
     @property
     def api(self):
@@ -98,7 +97,8 @@ class RestServer:
         """ Start the server if it is not running """
         if not self._running:
             try:
-                site = Site(resource=secure_resource(self._api, self._access_control))
+                resource = self._default_access_control.secure_resource(self._api)
+                site = Site(resource=resource)
                 self._listener = reactor.listenTCP(self._port,           # pylint: disable=no-member
                                                    site,
                                                    interface=self._interface)

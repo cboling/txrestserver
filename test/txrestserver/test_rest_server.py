@@ -17,8 +17,8 @@ import pytest_twisted
 from twisted.internet.error import CannotListenError
 # from mock import MagicMock
 
-from txrestserver.rest_server import RestServer, DEFAULT_INTERFACE, DEFAULT_PORT, \
-    DEFAULT_ACCESS_CONTROL
+from txrestserver.rest_server import RestServer, DEFAULT_INTERFACE, DEFAULT_PORT
+from txrestserver.access.access import DEFAULT_ACCESS_CONTROL
 
 from apis.api import MyRestAPI
 
@@ -34,7 +34,7 @@ def test_rest_server_defaults():
 
     assert server.interface == DEFAULT_INTERFACE
     assert server.port == DEFAULT_PORT
-    assert server.default_access_control == DEFAULT_ACCESS_CONTROL
+    assert server.default_access_control.access_method == DEFAULT_ACCESS_CONTROL
 
     # Not running until started
     assert not server.is_running

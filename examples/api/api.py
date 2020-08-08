@@ -63,7 +63,7 @@ class RestAPI(JsonAPIResource):
 
 
 @implementer(IRealm)
-class RestApiRealm(object):
+class RestApiRealm:
     """
     A realm which gives out L{GuardedResource} instances for authenticated users.
     """

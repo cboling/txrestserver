@@ -29,6 +29,14 @@ except ImportError:
     # from api.api import RestApiRealm
 
 
+access_control_none = {
+    'access-method': None,
+}
+
+access_control_basic_dict = {
+    'access-method': 'basic'
+}
+
 if __name__ == '__main__':
     server = RestServer(RestAPI())
     server.start()

@@ -105,23 +105,6 @@ bandit-test-all: venv bandit-test
 	@ (. ${TESTVENVDIR}/bin/activate && bandit -n 3 -r $(WORKING_DIR)/${VENVDIR})
 
 ######################################################################
-# Words matter
-RESTRICTED		= master slave whitelist blacklist
-SUFFIXES		= \*.py \*.md \*.rst \*.yaml \*.sh
-EXCLUDE_DIRS	= ${ENVDIR} ${TESTVENVDIR}
-
-sanitize-source:                          # TODO: not working.. need to fix
-	@ for pattern in ${SUFFIXES}; do \
-      for word in ${RESTRICTED}; do \
-        x=`find . -name '$${pattern}' -exec grep -Hwin '$${word}' {} \;` ;\
-        if [ `find . -name '$${pattern}' -exec grep -Hwin '$${word}' {} \;` ]; then \
-           echo "Restricted word '$${word}' found in one or more files" >&2; \
-           exit 1; \
-        fi; \
-      done; \
-    done
-
-######################################################################
 # Test support
 
 test: clean venv-test

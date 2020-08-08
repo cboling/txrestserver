@@ -37,7 +37,7 @@ class PrivateRestAPI(RestAPI):
 
 
 @implementer(IRealm)
-class PrivateRestApiRealm():
+class PrivateRestApiRealm:
     """
     A realm which gives out L{GuardedResource} instances for authenticated users.
     """
