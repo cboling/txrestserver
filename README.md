@@ -14,6 +14,7 @@ Status:
 
 | Version | Notes       |
 | :-----: | :---------- |
+|   0.3.0 | Began initial separation of API from Realm/Checkers with some initial checker types defined |
 |   0.2.0 | Reworked basic server API and added unit/security test coverage |
 |   0.1.0 | Initial pre-release (Alpha) with basic access authentication Support |
 

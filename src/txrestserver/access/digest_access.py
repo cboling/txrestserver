@@ -17,7 +17,6 @@ from twisted.web.guard import DigestCredentialFactory, HTTPAuthSessionWrapper
 
 # pylint: disable=relative-beyond-top-level        # TODO: work on this later
 from .access import AccessConfig, AuthenticationMethods, DEFAULT_AUTH_REALM
-from ..realm.checkers import PasswordDictChecker, passwords, users
 from ..realm.realm import Realm
 
 
@@ -27,10 +26,17 @@ class DigestAccessConfig(AccessConfig):
     Digest Authentication access method
     """
 
-    def __init___(self):
-        super().__init__(AuthenticationMethods.Digest)
+    def __init___(self, checker):
+        """
+        Initialize Digest Access Configuration
 
-    # pylint: disable=no-self-use           # TODO: Fix this later
+        :param checker: Credentials checker
+        """
+        if checker is None:
+            raise ValueError('Digest Access Authentication requires a credentials checker')
+
+        super().__init__(AuthenticationMethods.Digest, checker)
+
     def secure_resource(self, api_resource, _auth_realm=DEFAULT_AUTH_REALM):
         """
         Wrap the provide API resource with an HTTP Authentication Session Wrapper
@@ -40,9 +46,8 @@ class DigestAccessConfig(AccessConfig):
 
         :return: Resource, wrapped as requested
         """
-        checkers = [PasswordDictChecker(passwords)]    # TODO: Rework how username/passwords provided
-        realm = Realm(api_resource, users)             # TODO: Rework how username/passwords provided
-
+        checkers = [self._checker]
+        realm = Realm(api_resource, self._checker.users)
         portal = Portal(realm, checkers)
 
         # credentials_factory = DigestCredentialFactory("md5", auth_realm)

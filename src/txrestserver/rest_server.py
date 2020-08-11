@@ -51,7 +51,7 @@ class RestServer:
         self._listener = None
         self._running = False
         self._api = api
-        self._default_access_control = kwargs.pop('access_control', OpenAccessConfig())
+        self._default_access_control = kwargs.pop('access_config', OpenAccessConfig())
 
     def __del__(self):
         self.stop()

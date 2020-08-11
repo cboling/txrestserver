@@ -29,6 +29,12 @@ class IAuthorizedUserAvatar(Interface):                  # pylint: disable=inher
 class AuthorizedUserAvatar:
     """ Access avatar for username/password access authentication """
     def __init__(self, username, fullname):
+        """
+        Initialize avatar
+
+        :param username: (str) User login name
+        :param fullname: (str) User's full name for display/tracking purposes
+        """
         self.username = username
         self.fullname = fullname
 
@@ -48,15 +54,22 @@ class Realm:
 
     def requestAvatar(self, avatar_id, _mind, *interfaces):         # pylint: disable=invalid-name
         """
-        @param credentials: something which implements one of the interfaces in
-                            self.credentialInterfaces.
+        Return avatar which provides one of the given interfaces.
 
-        @return: a Deferred which will fire a string which identifies an
-                 avatar, an empty tuple to specify an authenticated anonymous user
-                 (provided as checkers.ANONYMOUS) or fire a Failure(UnauthorizedLogin).
-                 Alternatively, return the result itself.
+        @param avatar_id: a string that identifies an avatar, as returned by
+            L{ICredentialsChecker.requestAvatarId<twisted.cred.checkers.ICredentialsChecker.requestAvatarId>}
+            (via a Deferred).  Alternatively, it may be
+            C{twisted.cred.checkers.ANONYMOUS}.
+        @param _mind: usually None.  See the description of mind in L{Portal.login}.
+        @param interfaces: the interface(s) the returned avatar should implement,
+                           e.g.  C{IMailAccount}.  See the description of L{Portal.login}.
 
-        @see: L{twisted.cred.credentials}
+        @returns: a deferred which will fire a tuple of (interface,
+            avatarAspect, logout), or the tuple itself.  The interface will be
+            one of the interfaces passed in the 'interfaces' argument.  The
+            'avatarAspect' will implement that interface.  The 'logout' object
+            is a callable which will detach the mind from the avatar.
+
         """
         if IAuthorizedUserAvatar in interfaces:
             # TODO: How is this called and should it be

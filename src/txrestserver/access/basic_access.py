@@ -17,7 +17,6 @@ from twisted.web.guard import BasicCredentialFactory, HTTPAuthSessionWrapper
 
 # pylint: disable=relative-beyond-top-level        # TODO: work on this later
 from .access import AccessConfig, AuthenticationMethods, DEFAULT_AUTH_REALM
-from ..realm.checkers import PasswordDictChecker, passwords, users
 from ..realm.realm import Realm
 
 
@@ -26,10 +25,17 @@ class BasicAccessConfig(AccessConfig):
     Class to help simplify configuration of access credentials for the
     Basic Authentication access method
     """
-    def __init___(self):
-        super().__init__(AuthenticationMethods.Basic)
+    def __init___(self, checker):
+        """
+        Initialize Basic Access Configuration
 
-    # pylint: disable=no-self-use           # TODO: Fix this later
+        :param checker: Credentials checker
+        """
+        if checker is None:
+            raise ValueError('Basic Access Authentication requires a credentials checker')
+
+        super().__init__(AuthenticationMethods.Basic, checker)
+
     def secure_resource(self, api_resource, _auth_realm=DEFAULT_AUTH_REALM):
         """
         Wrap the provide API resource with an HTTP Authentication Session Wrapper
@@ -39,11 +45,11 @@ class BasicAccessConfig(AccessConfig):
 
         :return: Resource, wrapped as requested
         """
-        checkers = [PasswordDictChecker(passwords)]     # TODO: Rework how username/passwords provided
-        realm = Realm(api_resource, users)              # TODO: Rework how username/passwords provided
-
+        checkers = [self._checker]
+        realm = Realm(api_resource, self._checker.users)
         portal = Portal(realm, checkers)
 
+        # TODO: support auth realm
         # credentials_factory = BasicCredentialFactory(auth_realm)
         credentials_factory = [BasicCredentialFactory('auth')]
         resource = HTTPAuthSessionWrapper(portal, credentials_factory)

@@ -20,7 +20,8 @@ class AuthenticationMethods(IntEnum):
     Open = 0
     Basic = 1       # TODO: Only Open (None) and Basic are currently supported
     Digest = 2
-    Certificate = 3
+    TLS = 3
+    TLS_SRP = 4
     WebToken = 4
 
 
@@ -30,11 +31,12 @@ DEFAULT_AUTH_REALM = b'local'
 
 class AccessConfig:
     """ Base class for Authentication Access configuration """
-    def __init__(self, access_type=DEFAULT_ACCESS_CONTROL):
+    def __init__(self, access_type=DEFAULT_ACCESS_CONTROL, checker=None):
         if access_type not in (AuthenticationMethods.Open, AuthenticationMethods.Basic):
             raise NotImplementedError('Only Open and Basic authentication supported at this time')
 
         self._type = access_type
+        self._checker = checker
 
     @property
     def access_method(self):
