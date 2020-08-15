@@ -23,7 +23,7 @@ from twisted.internet import reactor
 from txrestserver.rest_server import RestServer
 from txrestserver.access.access import OpenAccessConfig
 from txrestserver.access.basic_access import BasicAccessConfig
-from txrestserver.access.digest_access import DigestAccessConfig
+# from txrestserver.access.digest_access import DigestAccessConfig
 from txrestserver.realm.checkers import PasswordDictChecker, CryptedPasswordDictChecker, \
     UNIXPasswordDatabase
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     config = {
         '-open': OpenAccessConfig(),
         '-basic': BasicAccessConfig(checker),
-        '-digest': DigestAccessConfig(checker),
+        # '-digest': DigestAccessConfig(checker),       # TODO: Following are not yet supported
         # '-tls': TlsAccessConfig(),
         # '-tls-srp': TlsSrpAccessConfig(),
         # '-webtoken': WebTokenAccessConfig(),

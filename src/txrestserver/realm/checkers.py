@@ -20,20 +20,6 @@ from twisted.cred.checkers import ICredentialsChecker
 from twisted.conch.checkers import UNIXPasswordDatabase, verifyCryptedPassword
 from zope.interface import implementer
 
-# TODO: After several checkers have been tested and implemented, refactor this so that a simplified
-#       set of classes are provided here and the credential values (username, passwords, ...) are
-#       part of the examples.
-
-users = {
-    b'admin': 'Administrator',
-    b'jblow': 'Joe Blow',
-}
-
-passwords = {
-    b'admin': b'admin',
-    b'jblow': b'password123',
-}
-
 # TODO: Add the anonomous (anyone) credentials checker
 
 

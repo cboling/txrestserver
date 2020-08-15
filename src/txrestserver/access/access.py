@@ -25,8 +25,8 @@ class AuthenticationMethods(IntEnum):
     WebToken = 4
 
 
-DEFAULT_ACCESS_CONTROL = AuthenticationMethods.Basic
-DEFAULT_AUTH_REALM = b'local'
+DEFAULT_ACCESS_CONTROL = AuthenticationMethods.Open
+DEFAULT_AUTH_REALM = b'local'                           # TODO: not really supported/tested at this time
 
 
 class AccessConfig:
