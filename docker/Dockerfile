@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.6.9-slim-buster
+FROM python:3.6.11-slim-buster
 
 MAINTAINER Chip Boling <chip@bcsw.net>
 
@@ -31,3 +31,15 @@ COPY test/requirements.txt /tmp/test
 
 RUN pip install --no-cache-dir -r /tmp/test/requirements.txt
 RUN pip install pydevd-pycharm~=201.7846.77
+
+# Add a couple of users in case we want to test out
+# the UNIX username/password checker
+
+RUN groupadd --gid 2001 administrators
+RUN groupadd --gid 2002 users
+
+RUN adduser --no-create-home --gecos 'Administrator' --uid 3001 --ingroup adminstrators admin
+RUN adduser --no-create-home --gecos 'Joe Blow' --uid 3002 --ingroup users jblow
+
+RUN echo "admin:admin" | chpasswd
+RUN echo "jblow:password123" | chpasswd
