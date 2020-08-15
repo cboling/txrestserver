@@ -14,6 +14,8 @@ Status:
 
 | Version | Notes       |
 | :-----: | :---------- |
+|   0.4.0 | Unit test coverage of basic-auth/plaintext authentication, verification of |
+|  |        UnixPasswordChecker (docker image)  - **this version is not yet released** |
 |   0.3.1 | Bugfix to type in the __init__ methods for the basic and digest access classes |
 |   0.3.0 | Began initial separation of API from Realm/Checkers with some initial checker types defined |
 |   0.2.0 | Reworked basic server API and added unit/security test coverage |

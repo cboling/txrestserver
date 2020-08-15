@@ -16,10 +16,6 @@ from twisted.cred.portal import IRealm
 from twisted.web.resource import IResource
 from zope.interface import implementer, Interface
 
-# TODO: After several checkers have been tested and implemented, refactor this so that a simplified
-#       set of classes are provided here and the credential values (username, passwords, ...) are
-#       part of the examples.
-
 
 class IAuthorizedUserAvatar(Interface):                  # pylint: disable=inherit-non-class
     """should have attributes username and fullname"""

@@ -20,7 +20,7 @@ from twisted.cred.checkers import ICredentialsChecker
 from twisted.conch.checkers import UNIXPasswordDatabase, verifyCryptedPassword
 from zope.interface import implementer
 
-# TODO: Add the anonomous (anyone) credentials checker
+# TODO: Add the anonymous (anyone) credentials checker
 
 
 @implementer(ICredentialsChecker)
