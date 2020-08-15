@@ -124,6 +124,9 @@ run-as-root-tests: # run-as-root-docker
 	docker run -i --rm -v ${PWD}:/txrestserver --privileged test-as-root:latest env \
            PYTHONPATH=/txrestserver python /txrestserver/test/test_as_root.py
 
+debug-docker-image:
+	docker build $(DOCKER_BUILD_ARGS) -t txrestserver-debug:latest -f docker/Dockerfile .
+
 ######################################################################
 # pylint support
 

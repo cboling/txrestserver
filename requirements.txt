@@ -14,5 +14,8 @@
 
 twisted        == 20.3.0
 zope.interface == 5.1.0
-# virtualenv     == 20.0.28
-# packaging      == 20.4
+
+# tiwsted-conch checkers require the following two modules
+bcrypt         == 3.1.7
+pyasn1         == 0.4.8
+cryptography   == 3.0
