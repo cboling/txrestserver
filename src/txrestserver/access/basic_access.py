@@ -25,7 +25,7 @@ class BasicAccessConfig(AccessConfig):
     Class to help simplify configuration of access credentials for the
     Basic Authentication access method
     """
-    def __init___(self, checker):
+    def __init__(self, checker):
         """
         Initialize Basic Access Configuration
 

@@ -26,7 +26,7 @@ class DigestAccessConfig(AccessConfig):
     Digest Authentication access method
     """
 
-    def __init___(self, checker):
+    def __init__(self, checker):
         """
         Initialize Digest Access Configuration
 
