@@ -25,7 +25,7 @@ from txrestserver.access.access import OpenAccessConfig
 from txrestserver.access.basic_access import BasicAccessConfig
 # from txrestserver.access.digest_access import DigestAccessConfig
 from txrestserver.realm.checkers import PasswordDictChecker, CryptedPasswordDictChecker, \
-    UNIXPasswordDatabase
+    UNIXPasswordDatabaseChecker
 
 try:
     from api.private.api import PrivateRestAPI as RestAPI
@@ -101,22 +101,27 @@ if __name__ == '__main__':
     #  Usage:   webtest.py [-open | -basic | -digest[-none | -plaintext | -encrypted | -unix]
     #
     checker = {
-        '-none': None,
-        '-plaintext': PasswordDictChecker(_plaintext_cfg['users'], _plaintext_cfg['passwords']),
-        '-encrypted': CryptedPasswordDictChecker(_encrypted_cfg['users'], _encrypted_cfg['passwords']),
-        '-unix': UNIXPasswordDatabase(),
-    }.get(next((arg for arg in sys.argv[1:] if arg.lower() in ('-plaintext',
-                                                               '-encrypted',
-                                                               '-unix')), '-none'))
+        '--none': None,
+        '--plaintext': PasswordDictChecker(_plaintext_cfg['users'], _plaintext_cfg['passwords']),
+        '--encrypted': CryptedPasswordDictChecker(_encrypted_cfg['users'], _encrypted_cfg['passwords']),
+        '--unix': UNIXPasswordDatabaseChecker(),
+    }.get(next((arg for arg in sys.argv[1:] if arg.lower() in ('--plaintext',
+                                                               '--encrypted',
+                                                               '--unix')), '--none'))
     config = {
-        '-open': OpenAccessConfig(),
-        '-basic': BasicAccessConfig(checker),
-        # '-digest': DigestAccessConfig(checker),       # TODO: Following are not yet supported
-        # '-tls': TlsAccessConfig(),
-        # '-tls-srp': TlsSrpAccessConfig(),
-        # '-webtoken': WebTokenAccessConfig(),
-    }.get(next((arg for arg in sys.argv[1:] if arg.lower() in ('-open',
-                                                               '-basic')), '-open'))
+        '--open': OpenAccessConfig(),
+        '--basic': BasicAccessConfig(checker),
+        # '--digest': DigestAccessConfig(checker),       # TODO: Following are not yet supported
+        # '--tls': TlsAccessConfig(),
+        # '--tls-srp': TlsSrpAccessConfig(),
+        # '--webtoken': WebTokenAccessConfig(),
+        # '--oauth': TODOCanThisBeSupported(),
+    }.get(next((arg for arg in sys.argv[1:] if arg.lower() in ('--open',
+                                                               '--basic',
+                                                               '--digest',
+                                                               '--tls',
+                                                               '--tls-srp',
+                                                               '--webtoken',)), '--open'))
     # Create and run the server
     server = RestServer(RestAPI(), access_config=config)
     server.start()

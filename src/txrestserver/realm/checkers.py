@@ -121,6 +121,12 @@ class UNIXPasswordDatabaseChecker(UNIXPasswordDatabase):
         """passwords: a dict-like object mapping user names to passwords"""
         super().__init__()
 
+    @property
+    def users(self):
+        """ Provide users property for realm control """
+        # TODO: Future -> Return dict of username->full-usernames for tracing/log purposes
+        return None
+
     def requestAvatarId(self, credentials):         # pylint: disable=invalid-name
         """
         Validate credentials and produce an avatar ID.
