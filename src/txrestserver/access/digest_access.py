@@ -26,23 +26,28 @@ class DigestAccessConfig(AccessConfig):
     Digest Authentication access method
     """
 
-    def __init__(self, checker):
+    def __init__(self, checker, algorithm='md5', auth_realm=DEFAULT_AUTH_REALM):
         """
         Initialize Digest Access Configuration
 
         :param checker: Credentials checker
+        @type algorithm: L{bytes}
+        @param algorithm: Case insensitive string specifying the hash algorithm to
+                          use.  Must be either C{'md5'} or C{'sha'}.  C{'md5-sess'} is B{not}
+                          supported.
+        :param auth_realm:  (bytes) Authentication Realm/domain
         """
         if checker is None:
             raise ValueError('Digest Access Authentication requires a credentials checker')
-
+        self._algorithm = algorithm
+        self._auth_realm = auth_realm
         super().__init__(AuthenticationMethods.Digest, checker)
 
-    def secure_resource(self, api_resource, _auth_realm=DEFAULT_AUTH_REALM):
+    def secure_resource(self, api_resource):
         """
         Wrap the provide API resource with an HTTP Authentication Session Wrapper
 
         :param api_resource: API resource to wrap
-        :param _auth_realm:  (str) Authentication Realm/domain
 
         :return: Resource, wrapped as requested
         """
@@ -50,8 +55,6 @@ class DigestAccessConfig(AccessConfig):
         realm = Realm(api_resource, self._checker.users)
         portal = Portal(realm, checkers)
 
-        # credentials_factory = DigestCredentialFactory("md5", auth_realm)
-        credentials_factory = DigestCredentialFactory("md5", 'auth')
-        _resource = HTTPAuthSessionWrapper(portal, credentials_factory)
-        raise NotImplementedError("TODO: Not yet tested/working")
-        # return resource
+        credentials_factory = DigestCredentialFactory(self._algorithm, self._auth_realm)
+        resource = HTTPAuthSessionWrapper(portal, [credentials_factory])
+        return resource

@@ -25,23 +25,24 @@ class BasicAccessConfig(AccessConfig):
     Class to help simplify configuration of access credentials for the
     Basic Authentication access method
     """
-    def __init__(self, checker):
+    def __init__(self, checker, auth_realm=DEFAULT_AUTH_REALM):
         """
         Initialize Basic Access Configuration
 
         :param checker: Credentials checker
+        :param auth_realm:  (bytes) Authentication Realm/domain
         """
         if checker is None:
             raise ValueError('Basic Access Authentication requires a credentials checker')
 
+        self._auth_realm = auth_realm
         super().__init__(AuthenticationMethods.Basic, checker)
 
-    def secure_resource(self, api_resource, _auth_realm=DEFAULT_AUTH_REALM):
+    def secure_resource(self, api_resource):
         """
         Wrap the provide API resource with an HTTP Authentication Session Wrapper
 
         :param api_resource: API resource to wrap
-        :param _auth_realm:  (str) Authentication Realm/domain
 
         :return: Resource, wrapped as requested
         """
@@ -50,8 +51,7 @@ class BasicAccessConfig(AccessConfig):
         portal = Portal(realm, checkers)
 
         # TODO: support auth realm
-        # credentials_factory = BasicCredentialFactory(auth_realm)
-        credentials_factory = [BasicCredentialFactory('auth')]
-        resource = HTTPAuthSessionWrapper(portal, credentials_factory)
-
+        credentials_factory = BasicCredentialFactory(self._auth_realm)
+        # credentials_factory = BasicCredentialFactory('auth')
+        resource = HTTPAuthSessionWrapper(portal, [credentials_factory])
         return resource

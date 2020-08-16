@@ -23,7 +23,7 @@ from twisted.internet import reactor
 from txrestserver.rest_server import RestServer
 from txrestserver.access.access import OpenAccessConfig
 from txrestserver.access.basic_access import BasicAccessConfig
-# from txrestserver.access.digest_access import DigestAccessConfig
+from txrestserver.access.digest_access import DigestAccessConfig
 from txrestserver.realm.checkers import PasswordDictChecker, CryptedPasswordDictChecker, \
     UNIXPasswordDatabaseChecker
 
@@ -94,6 +94,11 @@ _encrypted_cfg = {
 #
 #        curl -4 --user <username>:<password> http://localhost:8888/version
 #
+#   For Digest authentication, use a curl command line such as the following based on the
+#   credentials checker.
+#
+#        curl -4 --digest --user <username>:<password> http://localhost:8888/version
+#
 if __name__ == '__main__':
     #
     # Set up access method and credential checker based on command line
@@ -108,20 +113,34 @@ if __name__ == '__main__':
     }.get(next((arg for arg in sys.argv[1:] if arg.lower() in ('--plaintext',
                                                                '--encrypted',
                                                                '--unix')), '--none'))
-    config = {
-        '--open': OpenAccessConfig(),
-        '--basic': BasicAccessConfig(checker),
-        # '--digest': DigestAccessConfig(checker),       # TODO: Following are not yet supported
-        # '--tls': TlsAccessConfig(),
-        # '--tls-srp': TlsSrpAccessConfig(),
-        # '--webtoken': WebTokenAccessConfig(),
-        # '--oauth': TODOCanThisBeSupported(),
-    }.get(next((arg for arg in sys.argv[1:] if arg.lower() in ('--open',
-                                                               '--basic',
-                                                               '--digest',
-                                                               '--tls',
-                                                               '--tls-srp',
-                                                               '--webtoken',)), '--open'))
+
+    config_type = next((arg for arg in sys.argv[1:] if arg.lower() in ('--open',
+                                                                       '--basic',
+                                                                       '--digest',
+                                                                       '--tls',
+                                                                       '--tls-srp',
+                                                                       '--webtoken',)), '--open')
+    if config_type == '--open':
+        config = OpenAccessConfig()
+
+    elif config_type == '--basic':
+        config = BasicAccessConfig(checker)
+
+    elif config_type == '--digest':
+        config = DigestAccessConfig(checker)
+
+    # elif config_type == '--tls':
+    #     config = TlsAccessConfig()
+    #
+    # elif config_type == '--tls-srp':
+    #     config = TlsSrpAccessConfig()
+    #
+    # elif config_type == '--webtoken':
+    #     config = WebTokenAccessConfig()
+    #
+    # elif config_type == '--oauth':
+    #     config = TODOCanThisBeSupported()
+
     # Create and run the server
     server = RestServer(RestAPI(), access_config=config)
     server.start()

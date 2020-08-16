@@ -18,7 +18,7 @@ from enum import IntEnum
 class AuthenticationMethods(IntEnum):
     """ Authentication methods """
     Open = 0
-    Basic = 1       # TODO: Only Open (None) and Basic are currently supported
+    Basic = 1
     Digest = 2
     TLS = 3
     TLS_SRP = 4
@@ -26,14 +26,15 @@ class AuthenticationMethods(IntEnum):
 
 
 DEFAULT_ACCESS_CONTROL = AuthenticationMethods.Open
-DEFAULT_AUTH_REALM = b'local'                           # TODO: not really supported/tested at this time
+DEFAULT_AUTH_REALM = b'local'
 
 
 class AccessConfig:
     """ Base class for Authentication Access configuration """
     def __init__(self, access_type=DEFAULT_ACCESS_CONTROL, checker=None):
-        if access_type not in (AuthenticationMethods.Open, AuthenticationMethods.Basic):
-            raise NotImplementedError('Only Open and Basic authentication supported at this time')
+        if access_type not in (AuthenticationMethods.Open, AuthenticationMethods.Basic,
+                               AuthenticationMethods.Digest):
+            raise NotImplementedError('Only Open, Basic, and Digest authentication supported at this time')
 
         self._type = access_type
         self._checker = checker
@@ -43,12 +44,11 @@ class AccessConfig:
         """ Get the access method type for this configuration """
         return self._type
 
-    def secure_resource(self, api_resource, _auth_realm=DEFAULT_AUTH_REALM):
+    def secure_resource(self, api_resource):
         """
         Wrap the provide API resource with an HTTP Authentication Session Wrapper
 
         :param api_resource: API resource to wrap
-        :param _auth_realm:  (str) Authentication Realm
 
         :return: Resource, wrapped as requested
         """
@@ -61,7 +61,7 @@ class OpenAccessConfig(AccessConfig):
     def __init___(self):
         super().__init__(AuthenticationMethods.Open)
 
-    def secure_resource(self, api_resource, _auth_realm=DEFAULT_AUTH_REALM):
+    def secure_resource(self, api_resource):
         """
         Wrap the provide API resource with an HTTP Authentication Session Wrapper
 

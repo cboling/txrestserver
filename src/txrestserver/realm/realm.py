@@ -41,8 +41,7 @@ class AuthorizedUserAvatar:
 @implementer(IRealm)
 class Realm:
     """
-    A realm which gives out L{GuardedResource} instances for authenticated
-    users.
+    A realm which gives out L{GuardedResource} instances for authenticated users.
     """
     def __init__(self, api_resource, users):        # TODO: Users parameter is temporary for now
         self._api_resource = api_resource
@@ -76,4 +75,4 @@ class Realm:
         if IResource in interfaces:
             return IResource, self._api_resource, lambda: None
 
-        raise KeyError("None of the requested interfaces are supported")
+        raise NotImplementedError("None of the requested interfaces are supported")

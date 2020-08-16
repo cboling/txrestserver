@@ -15,7 +15,8 @@
 import copy
 from twisted.internet import defer
 from twisted.cred import error as credError
-from twisted.cred.credentials import IUsernamePassword
+from twisted.cred.credentials import IUsernamePassword, IUsernameHashedPassword, \
+    DigestedCredentials, UsernamePassword
 from twisted.cred.checkers import ICredentialsChecker
 from twisted.conch.checkers import UNIXPasswordDatabase, verifyCryptedPassword
 from zope.interface import implementer
@@ -26,7 +27,7 @@ from zope.interface import implementer
 @implementer(ICredentialsChecker)
 class PasswordDictChecker:
     """ Credential checker that validates a username and password against a dictionary """
-    credentialInterfaces = (IUsernamePassword,)
+    credentialInterfaces = (IUsernamePassword, IUsernameHashedPassword,)
 
     def __init__(self, users_db, passwords_db):
         """
@@ -60,10 +61,19 @@ class PasswordDictChecker:
         username = credentials.username
 
         if username in self._passwords:
-            if credentials.password == self._passwords[username]:
-                return defer.succeed(username)
+            if isinstance(credentials, DigestedCredentials):
+                # Digest Authentications
+                if credentials.checkPassword(self._passwords[username]):
+                    return defer.succeed(username)
 
-            return defer.fail(credError.UnauthorizedLogin("Bad password"))
+                return defer.fail(credError.UnauthorizedLogin("Bad password"))
+
+            if isinstance(credentials, UsernamePassword):
+                # Basic Authentication
+                if credentials.password == self._passwords[username]:
+                    return defer.succeed(username)
+
+                return defer.fail(credError.UnauthorizedLogin("Bad password"))
 
         return defer.fail(credError.UnauthorizedLogin("No such user"))
 
