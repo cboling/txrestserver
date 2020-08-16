@@ -81,7 +81,7 @@ class PasswordDictChecker:
 @implementer(ICredentialsChecker)
 class CryptedPasswordDictChecker:
     """ Similar to the PasswordDictChecker, but passwords are one-way encrypted"""
-    credentialInterfaces = (IUsernamePassword,)
+    credentialInterfaces = (IUsernamePassword, IUsernameHashedPassword,)
 
     def __init__(self, users_db, passwords_db):
         """
@@ -126,6 +126,7 @@ class CryptedPasswordDictChecker:
 @implementer(ICredentialsChecker)
 class UNIXPasswordDatabaseChecker(UNIXPasswordDatabase):
     """ Uses Unix username/password."""
+    credentialInterfaces = (IUsernamePassword, IUsernameHashedPassword,)
 
     def __init__(self):
         """passwords: a dict-like object mapping user names to passwords"""
@@ -154,7 +155,18 @@ class UNIXPasswordDatabaseChecker(UNIXPasswordDatabase):
         # Get from wrapped checker.  Later will tie this into an access logger that
         # I would like to provide in a future release
 
-        avatar = super().requestAvatarId(credentials)
+        if isinstance(credentials, UsernamePassword):
+            avatar = super().requestAvatarId(credentials)
+
+        elif isinstance(credentials, DigestedCredentials):
+            username = credentials.username
+            # TODO: Need to decode credentials..  Work in progress
+            password = 'something'
+
+            avatar = super().requestAvatarId(UsernamePassword(username, password))
+
+        else:
+            return defer.fail(credError.UnauthorizedLogin("unable to validate credentials"))
 
         def successful(username):
             # TODO: Add anything extra here
