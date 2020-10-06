@@ -51,7 +51,7 @@ class RestServer:
         self._listener = None
         self._running = False
         self._api = api
-        self._default_access_control = kwargs.pop('access_config', OpenAccessConfig())
+        self._access_control = kwargs.pop('access_config', OpenAccessConfig())
 
     def __del__(self):
         self.stop()
@@ -74,7 +74,7 @@ class RestServer:
     @property
     def default_access_control(self):
         """ Default access mechanism if API does not specify it """
-        return self._default_access_control
+        return self._access_control
 
     @property
     def api(self):
@@ -97,11 +97,16 @@ class RestServer:
         """ Start the server if it is not running """
         if not self._running:
             try:
-                resource = self._default_access_control.secure_resource(self._api)
+                resource = self._access_control.secure_resource(self._api)
                 site = Site(resource=resource)
-                self._listener = reactor.listenTCP(self._port,           # pylint: disable=no-member
-                                                   site,
-                                                   interface=self._interface)
+                if self._access_control.is_tls_access:
+                    self._listener = reactor.listenSSL(self._port,           # pylint: disable=no-member
+                                                       site,
+                                                       interface=self._interface)
+                else:
+                    self._listener = reactor.listenTCP(self._port,           # pylint: disable=no-member
+                                                       site,
+                                                       interface=self._interface)
                 self._running = True
 
             except CannotListenError as ex:

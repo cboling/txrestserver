@@ -24,6 +24,7 @@ from txrestserver.rest_server import RestServer
 from txrestserver.access.access import OpenAccessConfig
 from txrestserver.access.basic_access import BasicAccessConfig
 from txrestserver.access.digest_access import DigestAccessConfig
+from txrestserver.access.tls_access import TlsSrpAccessConfig
 from txrestserver.realm.checkers import PasswordDictChecker, CryptedPasswordDictChecker, \
     UNIXPasswordDatabaseChecker
 
@@ -101,7 +102,8 @@ _encrypted_cfg = {
 #
 if __name__ == '__main__':
     #
-    # Set up access method and credential checker based on command line
+    # Set up access method and credential checker based on command line.  Not all checkers
+    # can be used with all access methods.
     #
     #  Usage:   webtest.py [-open | -basic | -digest[-none | -plaintext | -encrypted | -unix]
     #
@@ -132,8 +134,8 @@ if __name__ == '__main__':
     # elif config_type == '--tls':
     #     config = TlsAccessConfig()
     #
-    # elif config_type == '--tls-srp':
-    #     config = TlsSrpAccessConfig()
+    elif config_type == '--tls-srp':
+        config = TlsSrpAccessConfig(checker)
     #
     # elif config_type == '--webtoken':
     #     config = WebTokenAccessConfig()

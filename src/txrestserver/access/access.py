@@ -33,8 +33,8 @@ class AccessConfig:
     """ Base class for Authentication Access configuration """
     def __init__(self, access_type=DEFAULT_ACCESS_CONTROL, checker=None):
         if access_type not in (AuthenticationMethods.Open, AuthenticationMethods.Basic,
-                               AuthenticationMethods.Digest):
-            raise NotImplementedError('Only Open, Basic, and Digest authentication supported at this time')
+                               AuthenticationMethods.Digest, AuthenticationMethods.TLS_SRP):
+            raise NotImplementedError('Only Open, Basic, Digest, and TLS-SRP authentication supported at this time')
 
         self._type = access_type
         self._checker = checker
@@ -43,6 +43,11 @@ class AccessConfig:
     def access_method(self):
         """ Get the access method type for this configuration """
         return self._type
+
+    @property
+    def is_tls_access(self):
+        """ Returns True if an TLS (SSL) connection should be used """
+        return False
 
     def secure_resource(self, api_resource):
         """

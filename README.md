@@ -14,7 +14,7 @@ Status:
 
 | Version | Notes       |
 | :-----: | :---------- |
-|   0.4.0 | Digest Authentiation Supported.  Only plain text dictionary checker tested at this time.
+|   0.4.0 | Digest Authentication Supported.  Only plain text dictionary checker tested at this time.
 |  |        Unit test coverage of basic-auth/plaintext authentication, verification of |
 |  |        UnixPasswordChecker (docker image)  - **this version is not yet released** |
 |   0.3.1 | Bugfix to type in the __init__ methods for the basic and digest access classes |
@@ -23,7 +23,9 @@ Status:
 |   0.1.0 | Initial pre-release (Alpha) with basic access authentication Support |
 
 ## Authentication Support
-Currently only Basic authentication is supported but digest and certificate support is planned.
+
+Currently both Basic and Digest access authentication is supported at this time with work on TLS-SRP
+authentication planned for the next release.
 
 **Note**: Authentication descriptions below are from Wikipedia.
 
