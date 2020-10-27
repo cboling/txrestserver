@@ -18,7 +18,7 @@ zope.interface >= 5.1.2
 # twisted-conch checkers require the following two modules
 bcrypt         == 3.1.7
 pyasn1         == 0.4.8
-cryptography   == 3.0
+cryptography   == 3.2
 
 # SSL requires the following
 pyOpenSSL      == 19.1.0
