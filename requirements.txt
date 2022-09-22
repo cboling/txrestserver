@@ -21,4 +21,4 @@ pyasn1         == 0.4.8
 cryptography   == 3.0
 
 # SSL requires the following
-pyOpenSSL      == 19.1.0
+# pyOpenSSL      == 19.1.0
