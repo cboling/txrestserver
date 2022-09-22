@@ -18,7 +18,7 @@ zope.interface == 5.4.0
 # tiwsted-conch checkers require the following two modules
 bcrypt         == 4.0.0
 pyasn1         == 0.4.8
-cryptography   == 3.0
+cryptography   == 3.3.2
 
 # SSL requires the following
 # pyOpenSSL      == 19.1.0
