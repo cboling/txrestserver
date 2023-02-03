@@ -2,7 +2,7 @@
 
 name: CI
 
-# Run on push and pull requests for master only at thit time
+# Run on push and pull requests for master only at this time
 on:
   push:
     branches: [ master ]
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.6]   # TODO: Add more versions -> [3.6, 3.7, 3.8]
+        python: [3.8, 3.9, 3.10]   # TODO: Add more versions -> [3.6, 3.7, 3.8]
 
     steps:
       - uses: actions/checkout@v2

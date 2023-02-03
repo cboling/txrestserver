@@ -22,7 +22,7 @@ PACKAGE_DIR     := $(WORKING_DIR)src/txrestserver
 VENVDIR         := venv
 TESTVENVDIR		:= ${VENVDIR}-test
 VENV_BIN        ?= virtualenv
-VENV_OPTS       ?= --python=python3.8 -v
+VENV_OPTS       ?= --python=python3.10 -v
 COVERAGE_OPTS	= --with-xcoverage --with-xunit --cover-package=pyvoltha-min\
                   --cover-html --cover-html-dir=tmp/cover
 PYLINT_OUT		= $(WORKING_DIR)pylint.out
@@ -56,7 +56,7 @@ help:
 
 venv: requirements.txt $(VENVDIR)/.built
 
-venv-test: requirements.txt $(TESTVENVDIR)/.built
+venv-test: test/requirements.txt $(TESTVENVDIR)/.built
 
 $(VENVDIR)/.built:
 	@ VIRTUAL_ENV_DISABLE_PROMPT=true $(VENV_BIN) ${VENV_OPTS} ${VENVDIR}

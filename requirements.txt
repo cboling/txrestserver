@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-twisted        == 22.8.0
-zope.interface == 5.4.0
+twisted        >= 22.4.0
+zope.interface >= 5.1.2
 
-# tiwsted-conch checkers require the following two modules
-bcrypt         == 4.0.0
+# twisted-conch checkers require the following two modules
+bcrypt         >= 4.0.1
 pyasn1         == 0.4.8
-cryptography   == 3.0
+cryptography   >= 39.0.0
 
 # SSL requires the following
-# pyOpenSSL      == 19.1.0
+pyOpenSSL      >= 23.0.0

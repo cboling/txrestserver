@@ -14,6 +14,7 @@ Status:
 
 | Version | Notes                                                                                       |
 |:-------:|:--------------------------------------------------------------------------------------------|
+|  1.0.1  | More module version upgrades                                                                |
 |  1.0.0  | Upgrade module versions and target first release to be for Python 3.8 -> 3.10               |
 |  0.4.0  | Digest Authentication Supported.  Only plain text dictionary checker tested at this time.   
 |         | Unit test coverage of basic-auth/plaintext authentication, verification of                  |

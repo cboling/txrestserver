@@ -45,7 +45,7 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/cboling/txrestserver',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries',
         'Topic :: Internet :: WWW/HTTP :: HTTP Servers',
