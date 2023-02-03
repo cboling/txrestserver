@@ -55,7 +55,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[path.splitext(path.basename(path))[0] for path in glob('src/*.py')],
